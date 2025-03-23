@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 namespace firstAPI.Controllers
 {
-  [ApiController]
   [Route("api/[controller]")]
+  [ApiController]
+
   public class StudentData : ControllerBase
   {
 
@@ -100,7 +101,7 @@ namespace firstAPI.Controllers
 
 
 
-    //Create Student POST
+    // POST  Create Student
     [HttpPost]
     [Route("Create")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -108,6 +109,8 @@ namespace firstAPI.Controllers
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model)
     {
+      // if (!ModelState.IsValid)
+      //   return BadRequest(ModelState); //Manual Validation Otherwise the [ApiController picks it up]
       if (model == null)
         return BadRequest();
 
@@ -122,7 +125,7 @@ namespace firstAPI.Controllers
       CollegeRepository.Students.Add(student);
 
       model.Id = student.Id;
-      return CreatedAtRoute("GetStudentByID", new { id = model.Id }, model); //201 & new URL as /Student/3
+      return CreatedAtRoute("GetStudentByID", new { id = model.Id }, model); //201 & new URL as /Student/{newID}
 
 
     }
