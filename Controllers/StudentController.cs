@@ -103,7 +103,7 @@ namespace firstAPI.Controllers
     //Create Student POST
     [HttpPost]
     [Route("Create")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model)
@@ -114,7 +114,7 @@ namespace firstAPI.Controllers
       int newId = CollegeRepository.Students.LastOrDefault().Id + 1;
       Student student = new Student
       {
-        Id = model.Id,
+        Id = newId,
         StudentName = model.StudentName,
         Address = model.Address,
         Email = model.Email,
@@ -122,8 +122,8 @@ namespace firstAPI.Controllers
       CollegeRepository.Students.Add(student);
 
       model.Id = student.Id;
+      return CreatedAtRoute("GetStudentByID", new { id = model.Id }, model); //201 & new URL as /Student/3
 
-      return Ok(model);
 
     }
 
