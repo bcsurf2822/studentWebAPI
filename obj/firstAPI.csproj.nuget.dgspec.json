@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/firstAPI.csproj": {}
+    "/workspaces/studentWebAPI/firstAPI.csproj": {}
   },
   "projects": {
-    "/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/firstAPI.csproj": {
+    "/workspaces/studentWebAPI/firstAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/firstAPI.csproj",
+        "projectUniqueName": "/workspaces/studentWebAPI/firstAPI.csproj",
         "projectName": "firstAPI",
-        "projectPath": "/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/firstAPI.csproj",
-        "packagesPath": "/Users/benjamincorbett/.nuget/packages/",
-        "outputPath": "/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/obj/",
+        "projectPath": "/workspaces/studentWebAPI/firstAPI.csproj",
+        "packagesPath": "/home/vscode/.nuget/packages/",
+        "outputPath": "/workspaces/studentWebAPI/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/benjamincorbett/.nuget/NuGet/NuGet.Config"
+          "/home/vscode/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -72,7 +72,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.202/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
