@@ -5,33 +5,27 @@ using System.Collections.Generic;
 
 namespace firstAPI.Controllers
 {
-  [Route("api/[controller]")]
   [ApiController]
+  [Route("api/[controller]")]
+  [Produces("application/json", "application/xml")]
 
   public class StudentData : ControllerBase
   {
+    private readonly ILogger<StudentData> _logger;
+    public StudentData(ILogger<StudentData> logger)
+    {
+      _logger = logger;
+    }
 
 
     // GET: all of the students
     [HttpGet]
     [Route("All", Name = "GetAllStudents")]
-    // [Produces("application/json", "application/xml")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<IEnumerable<StudentDTO>> GetStudents()
     {
-      // var students = new List<StudentDTO>();
-      // foreach (var item in CollegeRepository.Students)
-      // {
-      //   StudentDTO obj = new StudentDTO()
-      //   {
-      //     Id = item.Id,
-      //     StudentName = item.StudentName,
-      //     Address = item.Address,
-      //     Email = item.Email
-      //   };
-      //   students.Add(obj);
-      // }
+      _logger.LogInformation("GetStudents Started Execute");
       var students = CollegeRepository.Students.Select(s => new StudentDTO() //Converting students into the new DTO object var students = CollegeRepository.Students.Select(s => new StudentDTO
       {
         Id = s.Id,
@@ -56,10 +50,14 @@ namespace firstAPI.Controllers
       var student = CollegeRepository.Students.FirstOrDefault(n => n.Id == id);
       //400 Bad Quest = Client Error
       if (id <= 0)
+      {
+        _logger.LogWarning("Bad Request");
         return BadRequest();
+      }
 
       if (student == null)
       {
+        _logger.LogError("Student not found with that ID");
         return NotFound($"Student with {id} not found"); // returns 404 if student is not found
       }
       var studentDTO = new StudentDTO
