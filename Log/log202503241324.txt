@@ -1,0 +1,10 @@
+2025-03-24 13:24:28.561 -04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5085/swagger/index.html - null null
+2025-03-24 13:24:28.597 -04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5085/swagger/index.html - 200 null text/html;charset=utf-8 37.0247ms
+2025-03-24 13:24:28.611 -04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5085/swagger/index.js - null null
+2025-03-24 13:24:28.612 -04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5085/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-03-24 13:24:28.616 -04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5085/swagger/index.js - 200 null application/javascript;charset=utf-8 5.0385ms
+2025-03-24 13:24:28.618 -04:00 [WRN] Failed to determine the https port for redirect.
+2025-03-24 13:24:28.619 -04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5085/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 6.8626ms
+2025-03-24 13:24:28.620 -04:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5085/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-03-24 13:24:28.833 -04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5085/swagger/v1/swagger.json - null null
+2025-03-24 13:24:28.902 -04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5085/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 69.6993ms

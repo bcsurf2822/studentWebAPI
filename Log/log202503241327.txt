@@ -1,0 +1,28 @@
+2025-03-24 13:27:02.769 -04:00 [INF] Application is shutting down...
+2025-03-24 13:27:06.880 -04:00 [INF] Now listening on: http://localhost:5085
+2025-03-24 13:27:06.894 -04:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-03-24 13:27:06.894 -04:00 [INF] Hosting environment: Development
+2025-03-24 13:27:06.894 -04:00 [INF] Content root path: /Users/benjamincorbett/code/klobot/net/webAPI/firstAPI
+2025-03-24 13:27:18.317 -04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5085/api/Demo - null null
+2025-03-24 13:27:18.333 -04:00 [WRN] Failed to determine the https port for redirect.
+2025-03-24 13:27:18.334 -04:00 [INF] Executing endpoint 'CollegeApp.Controllers.DemoController.Index (firstAPI)'
+2025-03-24 13:27:18.338 -04:00 [INF] Route matched with {action = "Index", controller = "Demo"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult Index() on controller CollegeApp.Controllers.DemoController (firstAPI).
+2025-03-24 13:27:18.338 -04:00 [INF] Log message from LogInformation
+2025-03-24 13:27:18.338 -04:00 [WRN] Log message from LogWarning
+2025-03-24 13:27:18.338 -04:00 [ERR] Log message from LogError
+2025-03-24 13:27:18.338 -04:00 [FTL] Log message from LogCritical
+2025-03-24 13:27:18.340 -04:00 [INF] Executing StatusCodeResult, setting HTTP status code 200
+2025-03-24 13:27:18.341 -04:00 [INF] Executed action CollegeApp.Controllers.DemoController.Index (firstAPI) in 2.6378ms
+2025-03-24 13:27:18.345 -04:00 [INF] Executed endpoint 'CollegeApp.Controllers.DemoController.Index (firstAPI)'
+2025-03-24 13:27:18.348 -04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5085/api/Demo - 200 0 null 31.31ms
+2025-03-24 13:27:31.278 -04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5085/api/Demo - null null
+2025-03-24 13:27:31.281 -04:00 [INF] Executing endpoint 'CollegeApp.Controllers.DemoController.Index (firstAPI)'
+2025-03-24 13:27:31.281 -04:00 [INF] Route matched with {action = "Index", controller = "Demo"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult Index() on controller CollegeApp.Controllers.DemoController (firstAPI).
+2025-03-24 13:27:31.281 -04:00 [INF] Log message from LogInformation
+2025-03-24 13:27:31.281 -04:00 [WRN] Log message from LogWarning
+2025-03-24 13:27:31.281 -04:00 [ERR] Log message from LogError
+2025-03-24 13:27:31.281 -04:00 [FTL] Log message from LogCritical
+2025-03-24 13:27:31.282 -04:00 [INF] Executing StatusCodeResult, setting HTTP status code 200
+2025-03-24 13:27:31.282 -04:00 [INF] Executed action CollegeApp.Controllers.DemoController.Index (firstAPI) in 0.4907ms
+2025-03-24 13:27:31.282 -04:00 [INF] Executed endpoint 'CollegeApp.Controllers.DemoController.Index (firstAPI)'
+2025-03-24 13:27:31.282 -04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5085/api/Demo - 200 0 null 5.0156ms

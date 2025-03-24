@@ -2,14 +2,25 @@ using CollegeApp.MyLogging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.AddLog4Net();
+
+
+#region Loggin Settings
 // builder.Logging.ClearProviders();
 // builder.Logging.AddConsole();
 // builder.Logging.AddDebug(); //Built in Loggers
+#endregion
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.File("Log/log.txt")
-    .CreateLogger();
+#region SeriLog Settings
+// Log.Logger = new LoggerConfiguration().
+// MinimumLevel.Information()
+//     .WriteTo.File("Log/log.txt", rollingInterval: RollingInterval.Minute)
+//     .CreateLogger();
 
+//builder.Host.UserSerilog();  Overrides built in Loggers
+// builder.Logging.AddSerilog(); //Logging vs Services will do default loggin as well
+#endregion
 
 // Add services to the containers
 builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters(); //Allows JSON and XML

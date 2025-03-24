@@ -76,3 +76,13 @@
 /Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/obj/Debug/net9.0/firstAPI.pdb
 /Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/obj/Debug/net9.0/firstAPI.genruntimeconfig.cache
 /Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/obj/Debug/net9.0/ref/firstAPI.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Microsoft.Extensions.DependencyModel.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Serilog.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Serilog.AspNetCore.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Serilog.Extensions.Hosting.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Serilog.Extensions.Logging.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Serilog.Formatting.Compact.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Serilog.Settings.Configuration.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Serilog.Sinks.Console.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Serilog.Sinks.Debug.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Serilog.Sinks.File.dll
