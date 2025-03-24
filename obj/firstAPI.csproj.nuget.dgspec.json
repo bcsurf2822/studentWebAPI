@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/workspaces/studentWebAPI/firstAPI.csproj": {}
+    "/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/firstAPI.csproj": {}
   },
   "projects": {
-    "/workspaces/studentWebAPI/firstAPI.csproj": {
+    "/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/firstAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspaces/studentWebAPI/firstAPI.csproj",
+        "projectUniqueName": "/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/firstAPI.csproj",
         "projectName": "firstAPI",
-        "projectPath": "/workspaces/studentWebAPI/firstAPI.csproj",
-        "packagesPath": "/home/vscode/.nuget/packages/",
-        "outputPath": "/workspaces/studentWebAPI/obj/",
+        "projectPath": "/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/firstAPI.csproj",
+        "packagesPath": "/Users/benjamincorbett/.nuget/packages/",
+        "outputPath": "/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/vscode/.nuget/NuGet/NuGet.Config"
+          "/Users/benjamincorbett/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -44,6 +44,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.AspNetCore.JsonPatch": {
+              "target": "Package",
+              "version": "[9.0.3, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[9.0.3, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.3, )"
@@ -72,7 +80,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.202/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

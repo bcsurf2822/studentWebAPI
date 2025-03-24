@@ -1,7 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the containers
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters(); //Allows JSON and XML
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

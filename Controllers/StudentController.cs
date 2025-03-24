@@ -1,4 +1,5 @@
 using CollegeApp.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -14,6 +15,7 @@ namespace firstAPI.Controllers
     // GET: all of the students
     [HttpGet]
     [Route("All", Name = "GetAllStudents")]
+    // [Produces("application/json", "application/xml")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<IEnumerable<StudentDTO>> GetStudents()
@@ -30,13 +32,14 @@ namespace firstAPI.Controllers
       //   };
       //   students.Add(obj);
       // }
-      var students = CollegeRepository.Students.Select(s => new StudentDTO() //Converting students into the new DTO object LINQ
+      var students = CollegeRepository.Students.Select(s => new StudentDTO() //Converting students into the new DTO object var students = CollegeRepository.Students.Select(s => new StudentDTO
       {
         Id = s.Id,
         StudentName = s.StudentName,
         Address = s.Address,
         Email = s.Email
-      });
+      }).ToList();
+
       return Ok(students);
     }
 
@@ -114,6 +117,14 @@ namespace firstAPI.Controllers
       if (model == null)
         return BadRequest();
 
+      // if (model.AdmissionDate < DateTime.Now)
+      // {
+      //   // Add error message to ModelState
+      //   //Using Custom attribute
+      //   ModelState.AddModelError("Admission Date Error", "Admission date must be greater than or equal to todays date");
+      //   return BadRequest(ModelState);
+      // }
+
       int newId = CollegeRepository.Students.LastOrDefault().Id + 1;
       Student student = new Student
       {
@@ -126,9 +137,71 @@ namespace firstAPI.Controllers
 
       model.Id = student.Id;
       return CreatedAtRoute("GetStudentByID", new { id = model.Id }, model); //201 & new URL as /Student/{newID}
-
-
     }
+
+
+    //PUT
+    [HttpPut]
+    [Route("Update")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public ActionResult<StudentDTO> UpdateStudent([FromBody] StudentDTO model)
+    {
+      if (model == null || model.Id <= 0)
+        BadRequest();
+
+      var existingStudent = CollegeRepository.Students.Where(s => s.Id == model.Id).FirstOrDefault();
+
+      if (existingStudent == null)
+        return NotFound();
+
+      existingStudent.StudentName = model.StudentName;
+      existingStudent.Email = model.Email;
+      existingStudent.Address = model.Address;
+
+      return NoContent();
+    }
+
+
+    //PATCH
+    [HttpPatch]
+    [Route("{id:int}/UpdatePartial")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public ActionResult<StudentDTO> UpdateStudentPartial(int id, [FromBody] JsonPatchDocument<StudentDTO> patchDocumentl)
+    {
+      if (patchDocumentl == null || id <= 0)
+        BadRequest();
+
+      var existingStudent = CollegeRepository.Students.Where(s => s.Id == id).FirstOrDefault();
+
+      if (existingStudent == null)
+        return NotFound();
+
+      var studentDTO = new StudentDTO
+      {
+        Id = existingStudent.Id,
+        StudentName = existingStudent.StudentName,
+        Email = existingStudent.Email,
+        Address = existingStudent.Address,
+      };
+
+      patchDocumentl.ApplyTo(studentDTO, ModelState);
+
+      if (!ModelState.IsValid)
+        return BadRequest(ModelState);
+
+      existingStudent.StudentName = studentDTO.StudentName;
+      existingStudent.Email = studentDTO.Email;
+      existingStudent.Address = studentDTO.Address;
+
+      return NoContent(); //204
+    }
+
 
     //Delete student by ID
     [HttpDelete("deleteStudentByID/{id:int}", Name = "DeleteStudentByID")]

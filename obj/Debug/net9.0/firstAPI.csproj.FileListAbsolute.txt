@@ -72,3 +72,7 @@
 /workspaces/studentWebAPI/obj/Debug/net9.0/firstAPI.pdb
 /workspaces/studentWebAPI/obj/Debug/net9.0/firstAPI.genruntimeconfig.cache
 /workspaces/studentWebAPI/obj/Debug/net9.0/ref/firstAPI.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Microsoft.AspNetCore.JsonPatch.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Newtonsoft.Json.dll
+/Users/benjamincorbett/code/klobot/net/webAPI/firstAPI/bin/Debug/net9.0/Newtonsoft.Json.Bson.dll
