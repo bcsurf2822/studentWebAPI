@@ -1,9 +1,14 @@
 using CollegeApp.MyLogging;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 // builder.Logging.ClearProviders();
 // builder.Logging.AddConsole();
-// builder.Logging.AddDebug();
+// builder.Logging.AddDebug(); //Built in Loggers
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File("Log/log.txt")
+    .CreateLogger();
 
 
 // Add services to the containers

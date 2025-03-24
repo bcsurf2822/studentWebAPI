@@ -1,32 +1,32 @@
-// using CollegeApp.MyLogging;
-// using Microsoft.AspNetCore.Mvc;
+using CollegeApp.MyLogging;
+using Microsoft.AspNetCore.Mvc;
 
-// namespace CollegeApp.Controllers
-// {
-//   [Route("api/[controller]")]
-//   [ApiController]
-//   public class DemoController : ControllerBase
-//   {
+namespace CollegeApp.Controllers
+{
+  [Route("api/[controller]")]
+  [ApiController]
+  public class DemoController : ControllerBase
+  {
 
-//     private readonly IMyLogger _myLogger;
-//     //1. Strongly Coupled/tightly Coupled
-//     // public DemoController()
-//     // {
-//     //   _myLogger = new LogToServerMemory();
-//     // }
+    private readonly ILogger<DemoController> _logger;
+    public DemoController(ILogger<DemoController> logger)
+    {
+      _logger = logger;
+    }
 
+    [HttpGet]
+    public ActionResult Index()
+    {
+      _logger.LogTrace("Log message from Trace");
+      _logger.LogDebug("Log message from LogDebug");
+      _logger.LogInformation("Log message from LogInformation");
+      _logger.LogWarning("Log message from LogWarning");
+      _logger.LogError("Log message from LogError");
+      _logger.LogCritical("Log message from LogCritical");
 
-//     //2 Loosely Coupled
-//     public DemoController(IMyLogger myLogger)
-//     {
-//       _myLogger = myLogger;
-//     }
-//     [HttpGet]
-//     public ActionResult Index()
-//     {
-//       _myLogger.Log("Index method started");
-//       return Ok();
-//     }
+      return Ok();
 
-//   }
-// }
+    }
+
+  }
+}
