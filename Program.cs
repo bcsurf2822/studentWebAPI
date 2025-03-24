@@ -1,9 +1,11 @@
 using CollegeApp.MyLogging;
-using Serilog;
+// using Serilog;
+
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.AddLog4Net();
+
 
 
 #region Loggin Settings
