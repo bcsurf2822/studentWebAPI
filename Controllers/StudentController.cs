@@ -19,8 +19,8 @@ namespace firstAPI.Controllers
     private readonly ILogger<StudentController> _logger;
     private readonly CollegeDBContext _dbContext;
     private readonly IMapper _mapper;
-    private readonly IStudentRepository _studentRepository;
-    public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext, IMapper mapper, IStudentRepository studentRepository)
+    private readonly ICollegeRepository<Student> _studentRepository;
+    public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext, IMapper mapper, ICollegeRepository<Student> studentRepository)
     {
       _logger = logger;
       _dbContext = dbContext;
@@ -52,7 +52,7 @@ namespace firstAPI.Controllers
         return BadRequest();
       }
 
-      var student = await _studentRepository.GetByIdAsync(id);
+      var student = await _studentRepository.GetAsync(s => s.Id == id);
 
       if (student == null)
       {
@@ -72,7 +72,7 @@ namespace firstAPI.Controllers
       if (string.IsNullOrEmpty(name))
         return BadRequest();
 
-      var student = await _studentRepository.GetByNameAsync(name);
+      var student = await _studentRepository.GetAsync(s => s.StudentName.ToLower() == name.ToLower());
 
       if (student == null)
         return NotFound($"Student with name {name} not found");
@@ -124,11 +124,13 @@ namespace firstAPI.Controllers
       if (patchDocument == null || id <= 0)
         return BadRequest();
 
-      var existingStudent = await _studentRepository.GetByIdAsync(id);
+      // ✅ Use GetAsync instead of GetByIdAsync
+      var existingStudent = await _studentRepository.GetAsync(s => s.Id == id);
       if (existingStudent == null)
         return NotFound();
 
       var studentDTO = _mapper.Map<StudentDTO>(existingStudent);
+
       patchDocument.ApplyTo(studentDTO, ModelState);
 
       if (!ModelState.IsValid)
