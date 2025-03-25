@@ -29,6 +29,7 @@ builder.Services.AddDbContext<CollegeDBContext>(options =>
     options.UseSqlite(connectionString));
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped(typeof(ICollegeRepository<>), typeof(CollegeRepository<>));//Generic types for dep injection
 
 // Add services to the containers
 builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters(); //Allows JSON and XML
