@@ -22,8 +22,10 @@ namespace CollegeApp.Models
     [Required(ErrorMessage = "Address is required")]
     public string Address { get; set; } = string.Empty;
 
-    [DateCheck(ErrorMessage = "Admission Date must be today or in the future")]
-    public DateTime AdmissionDate { get; set; }
+    // [DateCheck(ErrorMessage = "Admission Date must be today or in the future")]
+    // public DateTime AdmissionDate { get; set; }
+
+    public string DOB { get; set; }
 
     // Optional password section
     // public string Password { get; set; }
