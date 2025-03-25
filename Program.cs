@@ -1,5 +1,6 @@
 using CollegeApp.Configurations;
 using CollegeApp.Data;
+using CollegeApp.Data.Repository;
 using CollegeApp.MyLogging;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // ✅ Register your DbContext with the SQLite provider
 builder.Services.AddDbContext<CollegeDBContext>(options =>
     options.UseSqlite(connectionString));
+
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 
 // Add services to the containers
 builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters(); //Allows JSON and XML
