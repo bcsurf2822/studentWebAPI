@@ -19,12 +19,12 @@ namespace firstAPI.Controllers
     private readonly CollegeDBContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IStudentRepository _studentRepository;
-    public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext, IMapper mapper, IStudentRepository studentRepository)
+    public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext, IMapper mapper, IStudentRepository _studentRepository)
     {
       _logger = logger;
       _dbContext = dbContext;
       _mapper = mapper;
-      _studentRepository = studentRepository;
+      _studentRepository = studentRepository
     }
 
 
@@ -39,7 +39,7 @@ namespace firstAPI.Controllers
       // var students = _dbContext.Students.ToList();//Returns everything
 
       //DTO: If you want to return only certain data
-      var students = await _studentRepository.GetAllAsync();
+      var students = await _dbContext.Students.ToListAsync();
       var studentDTOs = _mapper.Map<List<StudentDTO>>(students);
 
 
@@ -56,7 +56,7 @@ namespace firstAPI.Controllers
     [ProducesResponseType(StatusCodes.Status500InternalServerError)] //Documented Response Type
     public async Task<ActionResult<StudentDTO>> GetStudentById(int id)
     {
-      var student = await _studentRepository.GetByIdAsync(id);
+      var student = await _dbContext.Students.FirstOrDefaultAsync(n => n.Id == id);
 
       //400 Bad Quest = Client Error
       if (id <= 0)
@@ -88,7 +88,7 @@ namespace firstAPI.Controllers
       if (string.IsNullOrEmpty(name))
         return BadRequest();
 
-      var student = await _studentRepository.GetByNameAsync(name);
+      var student = await _dbContext.Students.FirstOrDefaultAsync(n => n.StudentName == name);
 
       if (student == null)
       {
@@ -116,9 +116,10 @@ namespace firstAPI.Controllers
 
       Student student = _mapper.Map<Student>(dto);
 
-      var id = await _studentRepository.CreateAsync(student);
+      await _dbContext.Students.AddAsync(student);
+      await _dbContext.SaveChangesAsync();
 
-      dto.Id = id;
+      dto.Id = student.Id;
       return CreatedAtRoute("GetStudentByID", new { id = dto.Id }, dto);
     }
 
