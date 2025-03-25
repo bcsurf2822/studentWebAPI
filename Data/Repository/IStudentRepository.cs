@@ -1,14 +1,9 @@
-
+using System.Threading.Tasks;
 
 namespace CollegeApp.Data.Repository
 {
-  public interface IStudentRepository
+  public interface IStudentRepository : ICollegeRepository<Student> //Gives access to all methods here
   {
-    Task<List<Student>> GetAllAsync();
-    Task<Student?> GetByIdAsync(int id);
-    Task<Student?> GetByNameAsync(string name);
-    Task<int> CreateAsync(Student student);
-    Task<int> UpdateAsync(Student student);
-    Task<bool> DeleteAsync(int id);
+    Task<List<Student>> GetStudentByFeeStatusAsync(int feeStatus);
   }
 }

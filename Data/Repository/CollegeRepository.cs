@@ -19,19 +19,14 @@ namespace CollegeApp.Data.Repository
       return await _dbSet.ToListAsync();
     }
 
-    public async Task<List<T>> GetAllByFilterAsync(Expression<Func<T, bool>> filter, bool useNoTracking = false)
-    {
-      return useNoTracking
-        ? await _dbSet.AsNoTracking().Where(filter).ToListAsync()
-        : await _dbSet.Where(filter).ToListAsync();
-    }
-
     public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool useNoTracking = false)
     {
       return useNoTracking
         ? await _dbSet.AsNoTracking().FirstOrDefaultAsync(filter)
         : await _dbSet.FirstOrDefaultAsync(filter);
     }
+
+
 
     public async Task<T> CreateAsync(T dbRecord)
     {

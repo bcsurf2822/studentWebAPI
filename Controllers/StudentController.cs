@@ -19,8 +19,8 @@ namespace firstAPI.Controllers
     private readonly ILogger<StudentController> _logger;
     private readonly CollegeDBContext _dbContext;
     private readonly IMapper _mapper;
-    private readonly ICollegeRepository<Student> _studentRepository;
-    public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext, IMapper mapper, ICollegeRepository<Student> studentRepository)
+    private readonly IStudentRepository _studentRepository;
+    public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext, IMapper mapper, IStudentRepository studentRepository)
     {
       _logger = logger;
       _dbContext = dbContext;
@@ -29,7 +29,7 @@ namespace firstAPI.Controllers
     }
 
 
-    // GET: all of the students
+    // GET ALL of the students
     [HttpGet("All", Name = "GetAllStudents")]
     public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
     {
@@ -90,10 +90,10 @@ namespace firstAPI.Controllers
         return BadRequest();
 
       var student = _mapper.Map<Student>(dto);
-      var newId = await _studentRepository.CreateAsync(student);
-      dto.Id = newId;
+      var createdStudent = await _studentRepository.CreateAsync(student);
+      dto.Id = createdStudent.Id;
 
-      return CreatedAtRoute("GetStudentByID", new { id = newId }, dto);
+      return CreatedAtRoute("GetStudentByID", new { id = createdStudent.Id }, dto);
     }
 
     //PUT
@@ -155,12 +155,12 @@ namespace firstAPI.Controllers
       if (id <= 0)
         return BadRequest();
 
-      var success = await _studentRepository.DeleteAsync(id);
-
-      if (!success)
+      var studentToDelete = await _studentRepository.GetAsync(s => s.Id == id);
+      if (studentToDelete == null)
         return NotFound($"Student with ID {id} not found");
 
-      return Ok(true);
+      var success = await _studentRepository.DeleteAsync(studentToDelete);
+      return Ok(success);
     }
   }
 }
