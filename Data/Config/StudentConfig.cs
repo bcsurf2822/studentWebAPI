@@ -15,6 +15,7 @@ namespace CollegeApp.Data.Config
       builder.Property(n => n.StudentName).HasMaxLength(250);
       builder.Property(n => n.Address).IsRequired(false).HasMaxLength(500);
       builder.Property(n => n.Email).IsRequired().HasMaxLength(250);
+      builder.HasOne(n => n.Department).WithMany(n => n.Students).HasForeignKey(n => n.DepartmentId).HasConstraintName("FK_STUDENTS_DEPARTMENT");
 
       builder.HasData(new List<Student>()
       {
