@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using AutoMapper;
 using CollegeApp.Data;
 using CollegeApp.Models;
 using Microsoft.AspNetCore.JsonPatch;
@@ -16,10 +17,12 @@ namespace firstAPI.Controllers
   {
     private readonly ILogger<StudentController> _logger;
     private readonly CollegeDBContext _dbContext;
-    public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext)
+    private readonly IMapper _mapper;
+    public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext, IMapper mapper)
     {
       _logger = logger;
       _dbContext = dbContext;
+      _mapper = mapper;
     }
 
 
@@ -34,18 +37,11 @@ namespace firstAPI.Controllers
       // var students = _dbContext.Students.ToList();//Returns everything
 
       //DTO: If you want to return only certain data
+      var students = await _dbContext.Students.ToListAsync();
+      var studentDTOs = _mapper.Map<List<StudentDTO>>(students);
 
-      // var students =  _dbContext.Students.Select(s => new StudentDTO() //Converting students into the new DTO object 
-      var students = await _dbContext.Students.Select(s => new StudentDTO()
-      {
-        Id = s.Id,
-        StudentName = s.StudentName,
-        Address = s.Address,
-        Email = s.Email, //Commented out will return null
-        DOB = s.DOB.ToString("MM/dd/yyyy")
-      }).ToListAsync();
 
-      return Ok(students);
+      return Ok(studentDTOs);
     }
 
 
@@ -72,14 +68,8 @@ namespace firstAPI.Controllers
         _logger.LogError("Student not found with that ID");
         return NotFound($"Student with {id} not found"); // returns 404 if student is not found
       }
-      var studentDTO = new StudentDTO
-      {
-        Id = student.Id,
-        StudentName = student.StudentName,
-        Email = student.Email,
-        Address = student.Address,
-        DOB = student.DOB.ToString("MM/dd/yyyy")
-      };
+
+      var studentDTO = _mapper.Map<StudentDTO>(student);
       return Ok(studentDTO); // returns 200 with the student data
     }
 
@@ -102,14 +92,8 @@ namespace firstAPI.Controllers
       {
         return NotFound($"Student with the name {name} not found");
       }
-      var studentDTO = new StudentDTO
-      {
-        Id = student.Id,
-        StudentName = student.StudentName,
-        Email = student.Email,
-        Address = student.Address,
-        DOB = student.DOB.ToString("MM/dd/yyyy")
-      };
+
+      var studentDTO = _mapper.Map<StudentDTO>(student);
       return Ok(studentDTO);
       // returns 200 with the student data
     }
@@ -122,35 +106,19 @@ namespace firstAPI.Controllers
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<StudentDTO>> CreateStudent([FromBody] StudentDTO model)
+    public async Task<ActionResult<StudentDTO>> CreateStudent([FromBody] StudentDTO dto)
     {
-      // if (!ModelState.IsValid)
-      //   return BadRequest(ModelState); //Manual Validation Otherwise the [ApiController picks it up]
-      if (model == null)
+
+      if (dto == null)
         return BadRequest();
 
-      // if (model.AdmissionDate < DateTime.Now)
-      // {
-      //   // Add error message to ModelState
-      //   //Using Custom attribute
-      //   ModelState.AddModelError("Admission Date Error", "Admission date must be greater than or equal to todays date");
-      //   return BadRequest(ModelState);
-      // }
+      Student student = _mapper.Map<Student>(dto);
 
-
-      Student student = new Student
-      {
-
-        StudentName = model.StudentName,
-        Address = model.Address,
-        Email = model.Email,
-        DOB = DateTime.ParseExact(model.DOB, "MM/dd/yyyy", null)
-      };
       await _dbContext.Students.AddAsync(student);
       await _dbContext.SaveChangesAsync();
 
-      model.Id = student.Id;
-      return CreatedAtRoute("GetStudentByID", new { id = model.Id }, model); //201 & new URL as /Student/{newID}
+      dto.Id = student.Id;
+      return CreatedAtRoute("GetStudentByID", new { id = dto.Id }, dto);
     }
 
 
@@ -161,29 +129,19 @@ namespace firstAPI.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<StudentDTO>> UpdateStudent([FromBody] StudentDTO model)
+    public async Task<ActionResult<StudentDTO>> UpdateStudent([FromBody] StudentDTO dto)
     {
-      if (model == null || model.Id <= 0)
-        BadRequest();
+      if (dto == null || dto.Id <= 0)
+        return BadRequest();
 
-      var existingStudent = await _dbContext.Students.AsNoTracking().Where(s => s.Id == model.Id).FirstOrDefaultAsync(); //Reading Data
+      var existingStudent = await _dbContext.Students.AsNoTracking().Where(s => s.Id == dto.Id).FirstOrDefaultAsync(); //Reading Data
 
       if (existingStudent == null)
         return NotFound();
 
-      var newRecord = new Student()
-      {
-        Id = model.Id,
-        StudentName = model.StudentName,
-        Email = model.Email,
-        Address = model.Address,
-        DOB = DateTime.ParseExact(model.DOB, "MM/dd/yyyy", null)
-      };
+      var newRecord = _mapper.Map<Student>(dto);
+
       _dbContext.Students.Update(newRecord);
-      // existingStudent.StudentName = model.StudentName;
-      // existingStudent.Email = model.Email;
-      // existingStudent.Address = model.Address;
-      // existingStudent.DOB = DateTime.ParseExact(model.DOB, "MM/dd/yyyy", null);
       _dbContext.SaveChangesAsync();
       return NoContent();
     }
@@ -196,42 +154,36 @@ namespace firstAPI.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<StudentDTO>> UpdateStudentPartial(int id, [FromBody] JsonPatchDocument<StudentDTO> patchDocumentl)
+    public async Task<ActionResult> UpdateStudentPartial(int id, [FromBody] JsonPatchDocument<StudentDTO> patchDocument)
     {
-      if (patchDocumentl == null || id <= 0)
+      if (patchDocument == null || id <= 0)
         return BadRequest();
 
       var existingStudent = await _dbContext.Students.FirstOrDefaultAsync(s => s.Id == id);
-
       if (existingStudent == null)
         return NotFound();
 
-      var studentDTO = new StudentDTO
-      {
-        Id = existingStudent.Id,
-        StudentName = existingStudent.StudentName,
-        Email = existingStudent.Email,
-        Address = existingStudent.Address,
-        DOB = existingStudent.DOB.ToString("MM/dd/yyyy") // ✅ format for DTO
-      };
+      var studentDTO = _mapper.Map<StudentDTO>(existingStudent);
 
-      patchDocumentl.ApplyTo(studentDTO, ModelState);
+      patchDocument.ApplyTo(studentDTO, ModelState);
 
       if (!ModelState.IsValid)
         return BadRequest(ModelState);
 
-      existingStudent.StudentName = studentDTO.StudentName;
-      existingStudent.Email = studentDTO.Email;
-      existingStudent.Address = studentDTO.Address;
+      TryValidateModel(studentDTO);
+      if (!ModelState.IsValid)
+        return BadRequest(ModelState);
 
-      // ✅ Parse DOB string back into DateTime
-      existingStudent.DOB = DateTime.ParseExact(studentDTO.DOB, "MM/dd/yyyy", null);
+      var updatedEntity = _mapper.Map<Student>(studentDTO);
+      updatedEntity.Id = id;
 
+      _dbContext.Students.Update(updatedEntity);
       await _dbContext.SaveChangesAsync();
-      return NoContent(); //204
+
+      return NoContent();
     }
 
-    //Delete student by ID
+    //DELETE student by ID
     [HttpDelete("deleteStudentByID/{id:int}", Name = "DeleteStudentByID")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -1,7 +1,7 @@
+using CollegeApp.Configurations;
 using CollegeApp.Data;
 using CollegeApp.MyLogging;
 using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 #region Loggin Settings
@@ -34,6 +34,7 @@ builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = tru
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 builder.Services.AddTransient<IMyLogger, LogToServerMemory>();
 var app = builder.Build();
 
