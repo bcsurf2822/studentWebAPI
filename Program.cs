@@ -30,7 +30,11 @@ builder.Services.AddDbContext<CollegeDBContext>(options =>
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped(typeof(ICollegeRepository<>), typeof(CollegeRepository<>));//Generic types for dep injection
-
+builder.Services.AddCors(options => options.AddPolicy("MyTestCORS", policy =>
+{
+    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+}
+));
 // Add services to the containers
 builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters(); //Allows JSON and XML
 
@@ -50,6 +54,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("MyTestCORS"); //Before authrizationand after routing
 app.UseAuthorization();
 app.MapControllers(); // Enables controller routing like [Route("api/[controller]")]
 app.Run();
