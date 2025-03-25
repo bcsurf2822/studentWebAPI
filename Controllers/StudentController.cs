@@ -18,11 +18,13 @@ namespace firstAPI.Controllers
     private readonly ILogger<StudentController> _logger;
     private readonly CollegeDBContext _dbContext;
     private readonly IMapper _mapper;
-    public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext, IMapper mapper)
+    private readonly IStudentRepository _studentRepository;
+    public StudentController(ILogger<StudentController> logger, CollegeDBContext dbContext, IMapper mapper, IStudentRepository studentRepository)
     {
       _logger = logger;
       _dbContext = dbContext;
       _mapper = mapper;
+      _studentRepository = studentRepository;
     }
 
 
@@ -37,7 +39,7 @@ namespace firstAPI.Controllers
       // var students = _dbContext.Students.ToList();//Returns everything
 
       //DTO: If you want to return only certain data
-      var students = await _dbContext.Students.ToListAsync();
+      var students = await _studentRepository.GetAllAsync();
       var studentDTOs = _mapper.Map<List<StudentDTO>>(students);
 
 
@@ -54,7 +56,7 @@ namespace firstAPI.Controllers
     [ProducesResponseType(StatusCodes.Status500InternalServerError)] //Documented Response Type
     public async Task<ActionResult<StudentDTO>> GetStudentById(int id)
     {
-      var student = await _dbContext.Students.FirstOrDefaultAsync(n => n.Id == id);
+      var student = await _studentRepository.GetByIdAsync(id);
 
       //400 Bad Quest = Client Error
       if (id <= 0)
@@ -86,7 +88,7 @@ namespace firstAPI.Controllers
       if (string.IsNullOrEmpty(name))
         return BadRequest();
 
-      var student = await _dbContext.Students.FirstOrDefaultAsync(n => n.StudentName == name);
+      var student = await _studentRepository.GetByNameAsync(name);
 
       if (student == null)
       {
@@ -114,10 +116,9 @@ namespace firstAPI.Controllers
 
       Student student = _mapper.Map<Student>(dto);
 
-      await _dbContext.Students.AddAsync(student);
-      await _dbContext.SaveChangesAsync();
+      var id = await _studentRepository.CreateAsync(student);
 
-      dto.Id = student.Id;
+      dto.Id = id;
       return CreatedAtRoute("GetStudentByID", new { id = dto.Id }, dto);
     }
 
