@@ -1,10 +1,12 @@
 using CollegeApp.MyLogging;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CollegeApp.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
+  // [EnableCors(PolicyName ="AllowGoogle")]
   public class DemoController : ControllerBase
   {
 

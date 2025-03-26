@@ -2,6 +2,7 @@ using CollegeApp.Configurations;
 using CollegeApp.Data;
 using CollegeApp.Data.Repository;
 using CollegeApp.MyLogging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,11 +31,34 @@ builder.Services.AddDbContext<CollegeDBContext>(options =>
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped(typeof(ICollegeRepository<>), typeof(CollegeRepository<>));//Generic types for dep injection
-builder.Services.AddCors(options => options.AddPolicy("MyTestCORS", policy =>
+// builder.Services.AddCors(options => options.AddPolicy("AllowAll", policy =>
+// {
+//     //Allow ALL origins
+//     // policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+// }
+// ));
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
 {
     policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-}
-));
+});
+    options.AddPolicy("AllowOnlyLocalHost", policy =>
+    {
+        //     //Allow ALL origins
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+    options.AddPolicy("AllowOnlyLocalHost", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+    }
+    );
+    options.AddPolicy("OnlyGoogle", policy =>
+{
+    policy.WithOrigins("http://google.com, gmail.com, drive.google").AllowAnyHeader().AllowAnyMethod();
+});
+});
 // Add services to the containers
 builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters(); //Allows JSON and XML
 
@@ -54,7 +78,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("MyTestCORS"); //Before authrizationand after routing
+app.UseCors(); //Default
+// app.UseCors("MyTestCORS"); //Before authrizationand after routing (we can only name 1 at a time)
 app.UseAuthorization();
 app.MapControllers(); // Enables controller routing like [Route("api/[controller]")]
 app.Run();
