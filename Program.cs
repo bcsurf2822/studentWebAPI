@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using System.Configuration;
 using System.Text;
 using CollegeApp.Configurations;
 using CollegeApp.Data;
@@ -5,8 +7,10 @@ using CollegeApp.Data.Repository;
 using CollegeApp.MyLogging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 #region Loggin Settings
@@ -87,7 +91,33 @@ builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = tru
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using hte bearer scheme.  Enter Bearer [space] add your token in the text input. Example: Bearer swetwe522",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Scheme = "Bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+{
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Id = "Bearer",
+                Type = ReferenceType.SecurityScheme
+            },
+            Scheme = "oauth2",
+            Name = "Bearer",
+            In = ParameterLocation.Header
+        },
+        new List<string>()
+    }
+});
+});
 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 builder.Services.AddTransient<IMyLogger, LogToServerMemory>();

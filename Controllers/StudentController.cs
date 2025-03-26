@@ -33,6 +33,10 @@ namespace firstAPI.Controllers
 
     // GET ALL of the students
     [HttpGet("All", Name = "GetAllStudents")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     // [AllowAnonymous] //Anyone Can Access (Authorize attribute)
     public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
     {
