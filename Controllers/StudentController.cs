@@ -3,6 +3,7 @@ using AutoMapper;
 using CollegeApp.Data;
 using CollegeApp.Data.Repository;
 using CollegeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,8 @@ namespace firstAPI.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]
-  [Produces("application/json", "application/xml")]
+  // [Produces("application/json", "application/xml")]
+  [Authorize(Roles = "Superadmin, Admin")] //Makes all of these endpoints secure
 
   public class StudentController : ControllerBase
   {
@@ -31,6 +33,7 @@ namespace firstAPI.Controllers
 
     // GET ALL of the students
     [HttpGet("All", Name = "GetAllStudents")]
+    // [AllowAnonymous] //Anyone Can Access (Authorize attribute)
     public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
     {
       _logger.LogInformation("GetStudents Started Execute");

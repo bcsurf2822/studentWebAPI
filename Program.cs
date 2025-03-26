@@ -81,5 +81,11 @@ app.UseHttpsRedirection();
 app.UseCors(); //Default
 // app.UseCors("MyTestCORS"); //Before authrizationand after routing (we can only name 1 at a time)
 app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapGet("api/testendpoint2", //ClientEndPoint
+    context => context.Response.WriteAsync(builder.Configuration.GetValue<string>("JWTSecret"))) //GetJWT Key
+});
 app.MapControllers(); // Enables controller routing like [Route("api/[controller]")]
 app.Run();
