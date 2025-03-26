@@ -1,9 +1,12 @@
+using System.Text;
 using CollegeApp.Configurations;
 using CollegeApp.Data;
 using CollegeApp.Data.Repository;
 using CollegeApp.MyLogging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 #region Loggin Settings
@@ -59,6 +62,26 @@ builder.Services.AddCors(options =>
     policy.WithOrigins("http://google.com, gmail.com, drive.google").AllowAnyHeader().AllowAnyMethod();
 });
 });
+
+
+//JWT Authentication configurations
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWTSecret"))),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+    };
+});
+
 // Add services to the containers
 builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters(); //Allows JSON and XML
 
@@ -81,11 +104,11 @@ app.UseHttpsRedirection();
 app.UseCors(); //Default
 // app.UseCors("MyTestCORS"); //Before authrizationand after routing (we can only name 1 at a time)
 app.UseAuthorization();
+var configuration = builder.Configuration;
 
-app.UseEndpoints(endpoints =>
+app.MapGet("/api/testendpoint2", () =>
 {
-    endpoints.MapGet("api/testendpoint2", //ClientEndPoint
-    context => context.Response.WriteAsync(builder.Configuration.GetValue<string>("JWTSecret"))) //GetJWT Key
+    return configuration.GetValue<string>("JWTSecret") ?? "Secret not found";
 });
 app.MapControllers(); // Enables controller routing like [Route("api/[controller]")]
 app.Run();
