@@ -11,7 +11,7 @@ namespace CollegeApp.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  [Authorize(Roles = "SuperAdmin, Admin")]
+
 
   public class LoginController : ControllerBase
   {
@@ -28,21 +28,23 @@ namespace CollegeApp.Controllers
         return BadRequest("Please Provide Username and Passworld");
       }
       LoginResponseDTO response = new() { UserName = model.UserName };
-      if (model.UserName == "Benjamin" && model.Password == "benben")
+      if (model.UserName == "ben" && model.Password == "benben")
       {
-        var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSecret"));
+        var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSecret") ?? "Secret not found");
         var tokenHandler = new JwtSecurityTokenHandler();
+        var now = DateTime.UtcNow;
+
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
           Subject = new ClaimsIdentity(new Claim[]
           {
-            //Username
-            new Claim(ClaimTypes.Name, model.UserName),
-            //Role
-            new Claim(ClaimTypes.Role, "Admin")
+    new Claim(ClaimTypes.Name, model.UserName),
+    new Claim(ClaimTypes.Role, "Admin")
           }),
-          Expires = DateTime.Now.AddHours(4),
-          SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+          NotBefore = now,
+          IssuedAt = now,
+          Expires = now.AddHours(4),
+          SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
